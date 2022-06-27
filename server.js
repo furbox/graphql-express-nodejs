@@ -8,14 +8,14 @@ connectDB();
 const app = express();
 
 app.get('/',(req, res) => {
-    res.send("Graphql API")
-})
+    res.send("Graphql API");
+});
 
 app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true
-}))
+}));
 
 app.listen(3000);
 
-console.log("Run un 3000")
+console.log("Run un 3000");
