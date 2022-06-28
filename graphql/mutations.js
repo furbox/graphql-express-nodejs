@@ -1,5 +1,5 @@
 import { GraphQLString } from "graphql";
-import { UserModel } from "../models/User.model.js";
+import UserModel from "../models/User.model.js";
 
 export const register = {
     type: GraphQLString,
@@ -10,9 +10,10 @@ export const register = {
         password: { type: GraphQLString },
         displayName: { type: GraphQLString },
     },
-    resolve(_, args) {
+    async resolve(_, args) {
         const { username, email, password, displayName } = args;
-        console.log(args)
+        const newUser = await UserModel.create({ username, email, password, displayName });
+        console.log(newUser);
         return "new user created";
     }
 }
