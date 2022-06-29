@@ -1,9 +1,10 @@
 import { GraphQLString } from "graphql";
 import UserModel from "../models/User.model.js";
+import { createJWT } from "../util/auth.js";
 
 export const register = {
     type: GraphQLString,
-    description: "Register a new user",
+    description: "Register a new user and return a token",
     args: {
         username: { type: GraphQLString },
         email: { type: GraphQLString },
@@ -12,8 +13,11 @@ export const register = {
     },
     async resolve(_, args) {
         const { username, email, password, displayName } = args;
-        const newUser = await UserModel.create({ username, email, password, displayName });
-        console.log(newUser);
-        return "new user created";
+        const user = new UserModel({ username, email, password, displayName });
+        await user.save();
+
+        const token = createJWT({ _id: user._id, username: user.username, email: user.email });
+
+        return token;
     }
 }
