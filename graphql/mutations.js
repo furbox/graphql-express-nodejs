@@ -32,10 +32,23 @@ export const login = {
     async resolve(_, args) {
         const user = await UserModel.findOne({ email: args.email }).select('+password');
 
-        if(!user || args.password !== user.password) throw new Error("Invalid Credentials");
+        if (!user || args.password !== user.password) throw new Error("Invalid Credentials");
 
         const token = createJWT({ _id: user._id, username: user.username, email: user.email });
 
         return token;
+    }
+}
+
+export const createPost = {
+    type: GraphQLString,
+    description: "Create a new post",
+    args: {
+        title: { type: GraphQLString },
+        body: { type: GraphQLString }
+    },
+    async resolve(_, args) {
+        console.log(args);
+        return "ok";
     }
 }
