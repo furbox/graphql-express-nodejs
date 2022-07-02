@@ -1,12 +1,15 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
 import { users, user, posts, post } from "./queries.js";
-import { register, login, createPost } from "./mutations.js";
+import { register, login, createPost, updatedPost } from "./mutations.js";
 
 const QueryType = new GraphQLObjectType({
     name: "QueryType",
     description: "The Root query type",
     fields: {
-        users, user, posts, post
+        users, 
+        user, 
+        posts, 
+        post
     }
 });
 
@@ -16,7 +19,8 @@ const MutationType = new GraphQLObjectType({
     fields: {
         register,
         login,
-        createPost
+        createPost,
+        updatedPost
     }
 });
 

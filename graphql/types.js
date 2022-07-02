@@ -21,8 +21,12 @@ export const PostType = new GraphQLObjectType({
         id: { type: GraphQLID },
         title: { type: GraphQLString },
         body: { type: GraphQLString },
-        author: { type: UserType, resolve(parent){
-            return UserModel.findById(parent.authorId)
-        } }
+        author: {
+            type: UserType, resolve(parent) {
+                return UserModel.findById(parent.authorId)
+            }
+        },
+        createdAt: { type: GraphQLString, },
+        updatedAt: { type: GraphQLString, }
     }
 });

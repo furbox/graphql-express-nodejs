@@ -6,9 +6,7 @@ import { PostType, UserType } from "./types.js";
 export const users = {
     type: new GraphQLList(UserType),
     description: "return users list",
-    resolve() {
-        return UserModel.find();
-    }
+    resolve: () => UserModel.find()
 }
 
 export const user = {
@@ -19,9 +17,7 @@ export const user = {
             type: GraphQLID
         }
     },
-    resolve(_, args) {
-        return UserModel.findById(args.id);
-    }
+    resolve: (_, { id }) => UserModel.findById(id)
 }
 
 export const posts = {
@@ -38,5 +34,5 @@ export const post = {
             type: GraphQLID
         }
     },
-    resolve: (_, args) => PostModel.findById(args.id)
+    resolve: (_, { id }) => PostModel.findById(id)
 }

@@ -7,6 +7,6 @@ export const authenticate = (req, res, next) => {
         req.verifiedUser = verified.user;
         next();
     } catch (error) {
-        return false;
+        next();
     }
 }

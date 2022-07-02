@@ -1,4 +1,4 @@
-import { GraphQLString } from "graphql";
+import { GraphQLID, GraphQLString } from "graphql";
 import PostModel from "../models/Post.model.js";
 import UserModel from "../models/User.model.js";
 import { createJWT } from "../util/auth_jwt.js";
@@ -53,6 +53,26 @@ export const createPost = {
         const post = new PostModel({ authorId: verifiedUser._id, title: args.title, body: args.body });
         await post.save();
 
+        return post;
+    }
+}
+
+export const updatedPost = {
+    type: PostType,
+    description: "update post",
+    args: {
+        id: { type: GraphQLID },
+        title: { type: GraphQLString },
+        body: { type: GraphQLString },
+    },
+    async resolve(_, { id, title, body }, { verifiedUser }) {
+        if (!verifiedUser) throw new Error("Unauthorized");
+
+        const post = await PostModel.findByIdAndUpdate(
+            { _id: id, authorId: verifiedUser._id },
+            { title, body },
+            { new: true }
+        );
         return post;
     }
 }
