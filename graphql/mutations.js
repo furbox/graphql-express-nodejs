@@ -1,6 +1,8 @@
 import { GraphQLString } from "graphql";
+import PostModel from "../models/Post.model.js";
 import UserModel from "../models/User.model.js";
-import { createJWT } from "../util/auth.js";
+import { createJWT } from "../util/auth_jwt.js";
+import { PostType } from "./types.js";
 
 export const register = {
     type: GraphQLString,
@@ -41,14 +43,16 @@ export const login = {
 }
 
 export const createPost = {
-    type: GraphQLString,
+    type: PostType,
     description: "Create a new post",
     args: {
         title: { type: GraphQLString },
         body: { type: GraphQLString }
     },
-    async resolve(_, args) {
-        console.log(args);
-        return "ok";
+    async resolve(_, args, { verifiedUser }) {
+        const post = new PostModel({ authorId: verifiedUser._id, title: args.title, body: args.body });
+        await post.save();
+
+        return post;
     }
 }
