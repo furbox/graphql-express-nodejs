@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
 import { users, user, posts, post } from "./queries.js";
-import { register, login, createPost, updatedPost } from "./mutations.js";
+import { register, login, createPost, updatedPost, deletedPost, addComment } from "./mutations.js";
 
 const QueryType = new GraphQLObjectType({
     name: "QueryType",
@@ -8,7 +8,7 @@ const QueryType = new GraphQLObjectType({
     fields: {
         users, 
         user, 
-        posts, 
+        posts,
         post
     }
 });
@@ -20,7 +20,9 @@ const MutationType = new GraphQLObjectType({
         register,
         login,
         createPost,
-        updatedPost
+        updatedPost,
+        deletedPost,
+        addComment
     }
 });
 

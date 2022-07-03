@@ -1,8 +1,9 @@
 import { GraphQLID, GraphQLString } from "graphql";
+import CommentModel from "../models/Comment.model.js";
 import PostModel from "../models/Post.model.js";
 import UserModel from "../models/User.model.js";
 import { createJWT } from "../util/auth_jwt.js";
-import { PostType } from "./types.js";
+import { CommentType, PostType } from "./types.js";
 
 export const register = {
     type: GraphQLString,
@@ -74,5 +75,34 @@ export const updatedPost = {
             { new: true }
         );
         return post;
+    }
+}
+
+export const deletedPost = {
+    type: GraphQLString,
+    description: "delete a post",
+    args: {
+        id: { type: GraphQLID }
+    },
+    async resolve(_, { id }, { verifiedUser }) {
+        if (!verifiedUser) throw new Error("Unauthorized");
+        const deletedPost = await PostModel.findOneAndDelete({ _id: id, authorId: verifiedUser._id });
+        if (!deletedPost) throw new Error("Post not found");
+        return "The post deleted";
+    }
+}
+
+export const addComment = {
+    type: CommentType,
+    description: "new Comment",
+    args: {
+        postId: { type: GraphQLID },
+        comment: { type: GraphQLString }
+    },
+    async resolve(_, { postId, comment }, { verifiedUser }) {
+        if (!verifiedUser) throw new Error("Unauthorized");
+        const com = await CommentModel({ comment, postId, userId: verifiedUser._id });
+        if (!com) throw new Error("Comment not found");
+        return com.save();
     }
 }
