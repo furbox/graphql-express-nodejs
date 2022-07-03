@@ -106,3 +106,37 @@ export const addComment = {
         return com.save();
     }
 }
+
+export const updatedComment = {
+    type: CommentType,
+    description: "update comment",
+    args: {
+        id: { type: GraphQLID },
+        comment: { type: GraphQLString },
+    },
+    async resolve(_, { id, comment }, { verifiedUser }) {
+        if (!verifiedUser) throw new Error("Unauthorized");
+
+        const com = await CommentModel.findByIdAndUpdate(
+            { _id: id, userId: verifiedUser._id },
+            { comment },
+            { new: true }
+        );
+        if (!com) throw new Error("Comment not found");
+        return com;
+    }
+}
+
+export const deletedComment = {
+    type: GraphQLString,
+    description: "delete a comment",
+    args: {
+        id: { type: GraphQLID }
+    },
+    async resolve(_, { id }, { verifiedUser }) {
+        if (!verifiedUser) throw new Error("Unauthorized");
+        const deleteComment = await CommentModel.findOneAndDelete({ _id: id, userId: verifiedUser._id });
+        if (!deleteComment) throw new Error("Comment not found");
+        return "The Comment deleted";
+    }
+}

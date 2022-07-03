@@ -1,7 +1,8 @@
 import { GraphQLID, GraphQLList } from "graphql";
+import CommentModel from "../models/Comment.model.js";
 import PostModel from "../models/Post.model.js";
 import UserModel from "../models/User.model.js";
-import { PostType, UserType } from "./types.js";
+import { CommentType, PostType, UserType } from "./types.js";
 
 export const users = {
     type: new GraphQLList(UserType),
@@ -35,4 +36,21 @@ export const post = {
         }
     },
     resolve: (_, { id }) => PostModel.findById(id)
+}
+
+export const comments = {
+    type: new GraphQLList(CommentType),
+    description: "return all commets",
+    resolve: () => CommentModel.find()
+}
+
+export const comment = {
+    type: CommentType,
+    description: "return one comment",
+    args: {
+        id: {
+            type: GraphQLID
+        }
+    },
+    resolve: (_, { id }) => CommentModel.findById(id)
 }
